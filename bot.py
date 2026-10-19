@@ -1,11 +1,10 @@
-import os
 import threading
 import time
 from supabase import create_client, Client
 
-# تثبيت الرابط والمفتاح مباشرة أو جلبهما من البيئة لضمان عدم حدوث خطأ Invalid URL
-SUPABASE_URL = os.environ.get("SUPABASE_URL", "https://yixhxiwyjkjbgyooicuo.supabase.co")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY", "sb_secret_tJDsNRcd128YttRNWQvIXg_LFFuhm28")
+# كتابة البيانات المباشرة والصحيحة لمنع أي خطأ في قراءة البيئة
+SUPABASE_URL = "https://yixhxiwyjkjbgyooicuo.supabase.co"
+SUPABASE_KEY = "sb_secret_tJDsNRcd128YttRNWQvIXg_LFFuhm28"
 
 print(f"🔗 جاري الاتصال برابط Supabase: {SUPABASE_URL}")
 
