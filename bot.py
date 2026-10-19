@@ -4,51 +4,42 @@ import random
 import string
 from supabase import create_client, Client
 
-# بيانات الاتصال بقاعدة البيانات
 SUPABASE_URL = "https://yixhxiwyjkjbgyooicuo.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGh4aXd5amtqYmd5b29pY3VvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjM2Njc2OCwiZXhwIjoyMTA3OTQyNzY4fQ.bfF-A4KvUvewLn9HdZpbe3EwGHAxXxTQ6-h4zzKq6IY"
 
-print(f"🔗 جاري الاتصال برابط Supabase: {SUPABASE_URL}")
-
-# إنشاء الاتصال
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-print("🚀 تم الاتصال بنجاح بقاعدة بيانات Supabase وبدء التشغيل!")
+print("🚀 تم الاتصال بنجاح بقاعدة بيانات Supabase وبدء التشغيل المستقر!")
 
 def generate_random_account():
-    """توليد إيميل وباسوورد عشوائي لعملية التسجيل"""
     letters = string.ascii_lowercase
     name = ''.join(random.choice(letters) for i in range(8))
     email = f"{name}@gmail.com"
     password = ''.join(random.choice(letters + string.digits) for i in range(10))
-    return email, password
+    return {"email": email, "password": password}
 
 def worker_task(thread_id):
-    """دالة الـ Thread لإنشاء الحسابات ورفعها مباشرة لـ Supabase"""
-    print(f"🔥 Thread {thread_id} بدأ العمل وجاري إنشاء الحسابات...")
+    print(f"🔥 Thread {thread_id} بدأ العمل في وضع الدفعات المستقرة...")
     
     while True:
         try:
-            # 1. توليد بيانات الحساب الجديد
-            email, password = generate_random_account()
+            # تجهيز دفعة من 10 حسابات لكل خيط في المرة الواحدة
+            batch_data = [generate_random_account() for _ in range(10)]
             
-            # 2. إرسال البيانات للجدول في Supabase
-            response = supabase.table("accounts").insert({
-                "email": email,
-                "password": password
-            }).execute()
+            # إرسال الدفعة دفعة واحدة لتقليل الضغط على السيرفر
+            supabase.table("accounts").insert(batch_data).execute()
             
-            print(f"✅ [Thread {thread_id}] تم إضافة الحساب بنجاح: {email}")
+            print(f"✅ [Thread {thread_id}] تم إضافة دفعة (10 حسابات) بنجاح")
             
-            # فاصل بسيط بين كل عملية إدخال عشان السيرفر ما يحصلش عليه ضغط مفاجئ
-            time.sleep(1)
+            # استراحة قصيرة جداً لتجنب حظر الاتصالات
+            time.sleep(0.5)
             
         except Exception as e:
-            print(f"❌ خطأ في Thread {thread_id}: {e}")
+            print(f"⚠️ تنبيه في Thread {thread_id}: {e}")
             time.sleep(2)
 
 if __name__ == "__main__":
-    threads_count = 50
-    print(f"⚡ جاري إطلاق {threads_count} خيط (Threads) للبدء في حفظ الحسابات...")
+    threads_count = 30  # تقليل عدد الخيوط قليلاً لضمان الاستقرار التام وعدم قطع الاتصال
+    print(f"⚡ جاري إطلاق {threads_count} خيط للعمل باستقرار تام...")
     
     threads = []
     for i in range(threads_count):
