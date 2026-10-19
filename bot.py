@@ -6,7 +6,7 @@ from supabase import create_client, Client
 
 # بيانات الاتصال بقاعدة البيانات
 SUPABASE_URL = "https://yixhxiwyjkjbgyooicuo.supabase.co"
-SUPABASE_KEY = "sb_secret_tJDsNRcd128YttRNWQvIXg_LFFuhm28"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpeGh4aXd5amtqYmd5b29pY3VvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MjM2Njc2OCwiZXhwIjoyMTA3OTQyNzY4fQ.bfF-A4KvUvewLn9HdZpbe3EwGHAxXxTQ6-h4zzKq6IY"
 
 print(f"🔗 جاري الاتصال برابط Supabase: {SUPABASE_URL}")
 
